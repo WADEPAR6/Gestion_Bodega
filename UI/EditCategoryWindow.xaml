@@ -1,0 +1,25 @@
+﻿<Window x:Class="UI.EditCategoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Editar Categoría" Height="193" Width="400">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="Nombre:" Margin="10" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0"/>
+        <TextBox Name="NombreTextBox" Width="200" Height="30" Margin="10" Grid.Row="0" Grid.Column="1"/>
+
+        <TextBlock Text="Descripción:" Margin="10" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0"/>
+        <TextBox Name="DescripcionTextBox" Width="200" Height="30" Margin="10" Grid.Row="1" Grid.Column="1"/>
+
+        <Button Content="Guardar" Width="100" Height="30" Margin="147,0,0,0" Click="Guardar_Click" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left"/>
+        <Button Content="Cancelar" Width="100" Height="30" Margin="28,0,0,0" Click="Cancelar_Click" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left"/>
+    </Grid>
+</Window>
