@@ -1,7 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
 using Core.Entities;
 using AppServices.Services;
-using System.Collections.ObjectModel;
 using System.Windows.Controls;
 
 namespace UI
@@ -37,17 +39,51 @@ namespace UI
             }
         }
 
-        private void EliminarArea_Click(object sender, RoutedEventArgs e)
+        private async void EliminarArea_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.DataContext is Area area)
             {
-                var confirmationWindow = new ConfirmationWindow("¿Estás seguro de que deseas eliminar esta área?");
-                var result = confirmationWindow.ShowDialog(); // Mostrar la ventana de confirmación y obtener el resultado
+                var items = _inventoryService.GetAllItems().Where(i => i.AreaID == area.Id).ToList();
 
-                if (result == true && confirmationWindow.IsConfirmed)
+                if (items.Any())
                 {
-                    _inventoryService.RemoveArea(area.Id);
-                    LoadAreas(); // Recargar las áreas después de eliminar
+                    var itemsObservable = new ObservableCollection<Item>(items);
+                    var areasObservable = new ObservableCollection<Area>(_inventoryService.GetAllAreas());
+
+                    var updateItemsWindow = new UpdateItemsWindow(itemsObservable, areasObservable, _inventoryService, area);
+                    updateItemsWindow.ItemsUpdatedEvent += async () =>
+                    {
+                        await Task.Delay(500); // Espera de 0.5 segundos antes de eliminar el área
+                        try
+                        {
+                            _inventoryService.RemoveArea(area.Id);
+                            LoadAreas();
+                            MessageBox.Show("Área eliminada con éxito.");
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error al eliminar el área: {ex.Message}");
+                        }
+                    };
+
+                    updateItemsWindow.ShowDialog();
+                }
+                else
+                {
+                    try
+                    {
+                        var confirmationWindow = new ConfirmationWindow("¿Estás seguro de que deseas eliminar esta área?");
+                        if (confirmationWindow.ShowDialog() == true && confirmationWindow.IsConfirmed)
+                        {
+                            _inventoryService.RemoveArea(area.Id);
+                            LoadAreas();
+                            MessageBox.Show("Área eliminada con éxito.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error al eliminar el área: {ex.Message}");
+                    }
                 }
             }
         }

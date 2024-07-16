@@ -45,7 +45,7 @@ namespace Infrastructure.Repositories
         public void RemoveArea(int id)
         {
             using var connection = new NpgsqlConnection(_connectionString);
-            var query = "DELETE FROM area WHERE Id = @Id";
+            var query = "DELETE FROM area WHERE id = @Id";
             connection.Execute(query, new { Id = id });
         }
 

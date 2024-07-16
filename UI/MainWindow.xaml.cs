@@ -82,13 +82,28 @@ namespace UI
         {
             if (sender is Button button && button.DataContext is Item item)
             {
-                var confirmationWindow = new ConfirmationWindow("¿Estás seguro de que deseas eliminar este item?");
-                var result = confirmationWindow.ShowDialog();
+                var childItems = _inventoryService.GetAllItems().Where(i => i.ParentID == item.Id).ToList();
 
-                if (result == true && confirmationWindow.IsConfirmed)
+                if (childItems.Any())
                 {
-                    _inventoryService.RemoveItem(item.Id);
-                    LoadItems();
+                    var itemsObservable = new ObservableCollection<Item>(childItems);
+                    var containersObservable = new ObservableCollection<Item>(_inventoryService.GetAllItems().Where(i => i.Id != item.Id));
+
+                    var manageContainerItemsWindow = new ManageContainerItemsWindow(itemsObservable, containersObservable, _inventoryService, item);
+                    manageContainerItemsWindow.ItemsUpdatedEvent += () => LoadItems();
+
+                    manageContainerItemsWindow.ShowDialog();
+                }
+                else
+                {
+                    var confirmationWindow = new ConfirmationWindow("¿Estás seguro de que deseas eliminar este ítem?");
+                    var result = confirmationWindow.ShowDialog();
+
+                    if (result == true && confirmationWindow.IsConfirmed)
+                    {
+                        _inventoryService.RemoveItem(item.Id);
+                        LoadItems();
+                    }
                 }
             }
         }
@@ -162,17 +177,24 @@ namespace UI
             }
         }
 
-        private void EliminarArea_Click(object sender, RoutedEventArgs e)
+        private void ViewContainerItems_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button button && button.DataContext is Area area)
+            if (sender is Button button && button.DataContext is Item container)
             {
-                var confirmationWindow = new ConfirmationWindow("¿Estás seguro de que deseas eliminar esta área?");
-                var result = confirmationWindow.ShowDialog();
-
-                if (result == true && confirmationWindow.IsConfirmed)
+                var items = _inventoryService.GetAllItems().Where(i => i.ParentID == container.Id).ToList();
+                if (items.Any())
                 {
-                    _inventoryService.RemoveArea(area.Id);
-                    LoadAreas(); // Recargar las áreas después de eliminar
+                    var itemsObservable = new ObservableCollection<Item>(items);
+                    var containersObservable = new ObservableCollection<Item>(_inventoryService.GetAllItems().Where(i => i.Id != container.Id));
+
+                    var manageContainerItemsWindow = new ManageContainerItemsWindow(itemsObservable, containersObservable, _inventoryService, container);
+                    manageContainerItemsWindow.ItemsUpdatedEvent += () => LoadItems();
+
+                    manageContainerItemsWindow.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show("No hay ítems dentro de este contenedor.", "Información", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
         }
