@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using Core.Entities;
 using AppServices.Services;
@@ -28,14 +30,23 @@ namespace UI
                 return;
             }
 
+            var selectedParentItem = (Item)ParentItemComboBox.SelectedItem;
+            var selectedArea = (Area)AreaComboBox.SelectedItem;
+
+            if (selectedParentItem == null && selectedArea == null)
+            {
+                MessageBox.Show("Por favor seleccione un área o un item padre.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             Item = new Item
             {
                 Nombre = NombreTextBox.Text,
                 Cantidad = int.Parse(CantidadTextBox.Text),
                 Descripcion = DescripcionTextBox.Text,
                 CategoriaID = ((Categoria)CategoriaComboBox.SelectedItem)?.Id,
-                AreaID = ((Area)AreaComboBox.SelectedItem)?.Id,
-                ParentItemID = ((Item)ParentItemComboBox.SelectedItem)?.Id
+                AreaID = selectedParentItem == null ? selectedArea?.Id : (int?)null,
+                ParentID = selectedParentItem?.Id
             };
 
             try

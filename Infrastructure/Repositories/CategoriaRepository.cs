@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Core.Entities;
-using Core.Interfaces;
 using Dapper;
 using Npgsql;
 
@@ -24,25 +23,30 @@ namespace Infrastructure.Repositories
         public Categoria GetCategoriaById(int id)
         {
             using var connection = new NpgsqlConnection(_connectionString);
-            return connection.QuerySingleOrDefault<Categoria>("SELECT * FROM categoria WHERE id = @Id", new { Id = id });
+            var query = "SELECT * FROM categoria WHERE Id = @Id";
+            return connection.QuerySingleOrDefault<Categoria>(query, new { Id = id });
         }
 
         public void AddCategoria(Categoria categoria)
         {
             using var connection = new NpgsqlConnection(_connectionString);
-            connection.Execute("INSERT INTO categoria (nombre, descripcion) VALUES (@Nombre, @Descripcion)", categoria);
+            var query = "INSERT INTO categoria (Nombre, Descripcion) VALUES (@Nombre, @Descripcion)";
+            connection.Execute(query, categoria);
         }
 
         public void UpdateCategoria(Categoria categoria)
         {
             using var connection = new NpgsqlConnection(_connectionString);
-            connection.Execute("UPDATE categoria SET nombre = @Nombre, descripcion = @Descripcion WHERE id = @Id", categoria);
+            var query = "UPDATE categoria SET Nombre = @Nombre, Descripcion = @Descripcion WHERE Id = @Id";
+            connection.Execute(query, categoria);
         }
 
         public void RemoveCategoria(int id)
         {
             using var connection = new NpgsqlConnection(_connectionString);
-            connection.Execute("DELETE FROM categoria WHERE id = @Id", new { Id = id });
+            var query = "DELETE FROM categoria WHERE Id = @Id";
+            connection.Execute(query, new { Id = id });
         }
+
     }
 }

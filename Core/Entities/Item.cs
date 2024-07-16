@@ -12,7 +12,7 @@ namespace Core.Entities
         public Categoria Categoria { get; set; }
         public int? AreaID { get; set; }
         public Area Area { get; set; }
-        public int? ParentItemID { get; set; }
+        public int? ParentID { get; set; }
         public Item ParentItem { get; set; }
     }
 }

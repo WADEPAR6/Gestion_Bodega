@@ -41,8 +41,14 @@ namespace UI
         {
             if (sender is Button button && button.DataContext is Area area)
             {
-                _inventoryService.RemoveArea(area.Id);
-                LoadAreas();
+                var confirmationWindow = new ConfirmationWindow("¿Estás seguro de que deseas eliminar esta área?");
+                var result = confirmationWindow.ShowDialog(); // Mostrar la ventana de confirmación y obtener el resultado
+
+                if (result == true && confirmationWindow.IsConfirmed)
+                {
+                    _inventoryService.RemoveArea(area.Id);
+                    LoadAreas(); // Recargar las áreas después de eliminar
+                }
             }
         }
 
