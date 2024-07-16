@@ -1,6 +1,7 @@
 ﻿<Window x:Class="UI.CategoryWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStartupLocation="CenterScreen"
         Title="Gestionar Categorías" Height="381" Width="975">
     <Grid Margin="20">
         <Grid.RowDefinitions>

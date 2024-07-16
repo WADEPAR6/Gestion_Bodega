@@ -1,6 +1,7 @@
 ﻿<Window x:Class="UI.UpdateItemsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStartupLocation="CenterScreen"
         xmlns:local="clr-namespace:UI"
         Title="Actualizar Ítems" Height="450" Width="600">
     <Window.Resources>
