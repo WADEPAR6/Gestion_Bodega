@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Core.Entities;
 using Core.Interfaces;
+using Infrastructure.Repositories;
 
 namespace AppServices.Services
 {
@@ -21,6 +22,11 @@ namespace AppServices.Services
         public IEnumerable<Item> GetAllItems()
         {
             return _itemRepository.GetAllItems();
+        }
+
+        public Item GetItem(int id)
+        {
+            return _itemRepository.GetItem(id);
         }
 
         public void AddItem(Item item)
@@ -44,6 +50,11 @@ namespace AppServices.Services
             return _categoriaRepository.GetAllCategorias();
         }
 
+        public Categoria GetCategoriaById(int id)
+        {
+            return _categoriaRepository.GetCategoriaById(id);
+        }
+
         public void AddCategoria(Categoria categoria)
         {
             _categoriaRepository.AddCategoria(categoria);
@@ -63,6 +74,11 @@ namespace AppServices.Services
         public IEnumerable<Area> GetAllAreas()
         {
             return _areaRepository.GetAllAreas();
+        }
+
+        public Area GetAreaById(int id)
+        {
+            return _areaRepository.GetAreaById(id);
         }
 
         public void AddArea(Area area)

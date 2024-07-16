@@ -23,6 +23,7 @@
   <ItemGroup>
     <Folder Include="Area\" />
     <Folder Include="Category\" />
+    <Folder Include="Converters\" />
     <Folder Include="Item\" />
   </ItemGroup>
 

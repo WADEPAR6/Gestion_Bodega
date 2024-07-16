@@ -37,7 +37,7 @@ namespace UI
 
             if (item.ParentItem != null)
             {
-                ParentItemComboBox.SelectedItem = parentItems.FirstOrDefault(p => p.Id == item.ParentItemID);
+                ParentItemComboBox.SelectedItem = parentItems.FirstOrDefault(p => p.Id == item.ParentID);
             }
         }
 
@@ -65,11 +65,11 @@ namespace UI
 
             if (ParentItemComboBox.SelectedItem is Item selectedParentItem)
             {
-                Item.ParentItemID = selectedParentItem.Id;
+                Item.ParentID = selectedParentItem.Id;
             }
             else
             {
-                Item.ParentItemID = null;
+                Item.ParentID = null;
             }
 
             _inventoryService.UpdateItem(Item);

@@ -16,51 +16,39 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <!-- Label for Search by Name -->
+        <TextBlock Text="Buscar por Nombre" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,0,5"/>
         <!-- Search by Name -->
-        <TextBox Name="SearchNameTextBox" Width="300" Height="30" Grid.Row="0" Grid.Column="0" TextChanged="SearchNameTextBox_TextChanged" local:PlaceholderTextExtension.Placeholder="Buscar por nombre"/>
+        <TextBox Name="SearchNameTextBox" Width="300" Height="30" Grid.Row="1" Grid.Column="0" TextChanged="SearchNameTextBox_TextChanged" />
 
+        <!-- Label for Search by Category -->
+        <TextBlock Text="Buscar por Categoría" Grid.Row="0" VerticalAlignment="Top" Margin="320,5,260,0" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
         <!-- Search by Category -->
-        <ComboBox Name="SearchCategoryComboBox" Width="300" Height="30" Grid.Row="1" Grid.Column="0" SelectionChanged="SearchCategoryComboBox_SelectionChanged" DisplayMemberPath="Nombre"/>
-        <Button Content="Todos" Width="150" Height="30" Click="ShowAllItems_Click" Grid.Column="1" HorizontalAlignment="Left" Margin="410,0,0,0"/>
+        <ComboBox Name="SearchCategoryComboBox" Width="300" Height="30" Grid.Row="1" SelectionChanged="SearchCategoryComboBox_SelectionChanged" DisplayMemberPath="Nombre" Margin="330,10,0,10" Grid.ColumnSpan="2"/>
+        <Button Content="Todos" Width="100" Height="30" Click="ShowAllItems_Click" Grid.Row="2" HorizontalAlignment="Left" Margin="470,0,0,0"/>
 
+        <!-- Label for Search by Parent Name -->
+        <TextBlock Text="Buscar por Contenedor" Grid.Column="1" VerticalAlignment="Top" Margin="58,-5,-58,0"/>
         <!-- Search by Parent Name -->
-        <TextBox Name="SearchParentTextBox" Width="300" Height="30" Grid.Column="0" TextChanged="SearchParentTextBox_TextChanged" local:PlaceholderTextExtension.Placeholder="Buscar por padre" Grid.ColumnSpan="2" Margin="354,10,0,10"/>
+        <TextBox Name="SearchParentTextBox" Width="300" Height="30" Grid.Row="1" TextChanged="SearchParentTextBox_TextChanged" Margin="85,10,0,10" Grid.Column="1"/>
 
         <!-- Add Button -->
-        <Button Content="Agregar Item" Width="150" Height="30" Click="OpenAddItemWindow_Click" Background="{StaticResource AccentBrush}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="410,0,0,0"/>
+        <Button Content="Agregar Item" Width="150" Height="30" Click="OpenAddItemWindow_Click" Background="{StaticResource AccentBrush}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="430,0,0,0"/>
 
         <!-- Buttons for Categories and Areas -->
-        <Button Content="Gestionar Categorías" Width="150" Height="30" Click="OpenCategoryWindow_Click" Background="{StaticResource PrimaryBrush}" Grid.Row="1" Grid.Column="1"/>
-        <Button Content="Gestionar Áreas" Width="150" Height="30" Click="OpenAreaWindow_Click" Background="{StaticResource PrimaryBrush}" Grid.Column="1"/>
+        <Button Content="Gestionar Categorías" Width="150" Height="30" Click="OpenCategoryWindow_Click" Background="{StaticResource PrimaryBrush}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="30,0,0,0"/>
+        <Button Content="Gestionar Áreas" Width="150" Height="30" Click="OpenAreaWindow_Click" Background="{StaticResource PrimaryBrush}" Grid.Row="2" Grid.Column="1"/>
 
         <!-- ListView for Items -->
-        <ListView Name="ItemsListView" Grid.Row="4" Grid.ColumnSpan="2">
+        <ListView Name="ItemsListView" Grid.Row="3" Grid.ColumnSpan="2" Margin="10,20,10,20">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Nombre" DisplayMemberBinding="{Binding Nombre}" Width="200"/>
                     <GridViewColumn Header="Cantidad" DisplayMemberBinding="{Binding Cantidad}" Width="75"/>
-                    <GridViewColumn Header="Categoría" Width="125">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Categoria.Nombre}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Área" Width="75">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Area.Nombre}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
+                    <GridViewColumn Header="Categoría" DisplayMemberBinding="{Binding Categoria.Nombre}" Width="125"/>
+                    <GridViewColumn Header="Área" DisplayMemberBinding="{Binding Area.Nombre}" Width="75"/>
                     <GridViewColumn Header="Descripción" DisplayMemberBinding="{Binding Descripcion}" Width="250"/>
-                    <GridViewColumn Header="Padre" Width="200">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding ParentItem.Nombre}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
+                    <GridViewColumn Header="Contenedor" DisplayMemberBinding="{Binding ParentItem.Nombre}" Width="200"/>
                     <GridViewColumn Header="Acciones" Width="170">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>

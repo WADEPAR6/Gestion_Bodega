@@ -24,25 +24,30 @@ namespace Infrastructure.Repositories
         public Area GetAreaById(int id)
         {
             using var connection = new NpgsqlConnection(_connectionString);
-            return connection.QuerySingleOrDefault<Area>("SELECT * FROM area WHERE id = @Id", new { Id = id });
+            var query = "SELECT * FROM area WHERE Id = @Id";
+            return connection.QuerySingleOrDefault<Area>(query, new { Id = id });
         }
 
         public void AddArea(Area area)
         {
             using var connection = new NpgsqlConnection(_connectionString);
-            connection.Execute("INSERT INTO area (nombre, descripcion) VALUES (@Nombre, @Descripcion)", area);
+            var query = "INSERT INTO area (Nombre, Descripcion) VALUES (@Nombre, @Descripcion)";
+            connection.Execute(query, area);
         }
 
         public void UpdateArea(Area area)
         {
             using var connection = new NpgsqlConnection(_connectionString);
-            connection.Execute("UPDATE area SET nombre = @Nombre, descripcion = @Descripcion WHERE id = @Id", area);
+            var query = "UPDATE area SET Nombre = @Nombre, Descripcion = @Descripcion WHERE Id = @Id";
+            connection.Execute(query, area);
         }
 
         public void RemoveArea(int id)
         {
             using var connection = new NpgsqlConnection(_connectionString);
-            connection.Execute("DELETE FROM area WHERE id = @Id", new { Id = id });
+            var query = "DELETE FROM area WHERE Id = @Id";
+            connection.Execute(query, new { Id = id });
         }
+
     }
 }

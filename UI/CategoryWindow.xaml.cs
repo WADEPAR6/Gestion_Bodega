@@ -41,8 +41,14 @@ namespace UI
         {
             if (sender is Button button && button.DataContext is Categoria category)
             {
-                _inventoryService.RemoveCategoria(category.Id);
-                LoadCategories();
+                var confirmationWindow = new ConfirmationWindow("¿Estás seguro de que deseas eliminar esta categoría?");
+                var result = confirmationWindow.ShowDialog();
+
+                if (result == true && confirmationWindow.IsConfirmed)
+                {
+                    _inventoryService.RemoveCategoria(category.Id);
+                    LoadCategories();
+                }
             }
         }
 

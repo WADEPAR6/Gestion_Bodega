@@ -1,10 +1,9 @@
-﻿using Core.Entities;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Core.Entities;
 using Core.Interfaces;
 using Dapper;
 using Npgsql;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 
 namespace Infrastructure.Repositories
 {
@@ -17,77 +16,81 @@ namespace Infrastructure.Repositories
             _connectionString = connectionString;
         }
 
-        public void AddItem(Item item)
+        public IEnumerable<Item> GetAllItems()
         {
-            using (IDbConnection db = new NpgsqlConnection(_connectionString))
-            {
-                var sql = "INSERT INTO items (nombre, cantidad, descripcion, categoriaid, areaid, parentid) VALUES (@Nombre, @Cantidad, @Descripcion, @CategoriaID, @AreaID, @ParentID)";
-                db.Execute(sql, item);
-            }
-        }
-
-        public void UpdateItem(Item item)
-        {
-            using (IDbConnection db = new NpgsqlConnection(_connectionString))
-            {
-                var sql = "UPDATE items SET nombre = @Nombre, cantidad = @Cantidad, descripcion = @Descripcion, categoriaid = @CategoriaID, areaid = @AreaID, parentid = @ParentID WHERE id = @Id";
-                db.Execute(sql, item);
-            }
-        }
-
-        public void RemoveItem(int id)
-        {
-            using (IDbConnection db = new NpgsqlConnection(_connectionString))
-            {
-                var sql = "DELETE FROM items WHERE id = @Id";
-                db.Execute(sql, new { Id = id });
-            }
+            using var connection = new NpgsqlConnection(_connectionString);
+            var query = @"
+                SELECT i.*, c.*, a.*, p.*, pa.*
+                FROM items i
+                LEFT JOIN categoria c ON i.CategoriaID = c.Id
+                LEFT JOIN area a ON i.AreaID = a.Id
+                LEFT JOIN items p ON i.ParentID = p.Id
+                LEFT JOIN area pa ON p.AreaID = pa.Id";
+            var items = connection.Query<Item, Categoria, Area, Item, Area, Item>(
+                query,
+                (item, categoria, area, parentItem, parentArea) =>
+                {
+                    item.Categoria = categoria;
+                    item.Area = area;
+                    item.ParentItem = parentItem;
+                    if (item.ParentItem != null)
+                    {
+                        item.ParentItem.Area = parentArea;
+                    }
+                    return item;
+                });
+            return items;
         }
 
         public Item GetItem(int id)
         {
-            using (IDbConnection db = new NpgsqlConnection(_connectionString))
-            {
-                var sql = @"SELECT i.*, c.*, a.*, p.*
-                    FROM items i
-                    JOIN categoria c ON i.categoriaid = c.id
-                    JOIN area a ON i.areaid = a.id
-                    LEFT JOIN items p ON i.parentid = p.id
-                    WHERE i.id = @Id";
-                var result = db.Query<Item, Categoria, Area, Item, Item>(sql,
-                    (item, categoria, area, parentItem) =>
+            using var connection = new NpgsqlConnection(_connectionString);
+            var query = @"
+                SELECT i.*, c.*, a.*, p.*, pa.*
+                FROM items i
+                LEFT JOIN categoria c ON i.CategoriaID = c.Id
+                LEFT JOIN area a ON i.AreaID = a.Id
+                LEFT JOIN items p ON i.ParentID = p.Id
+                LEFT JOIN area pa ON p.AreaID = pa.Id
+                WHERE i.Id = @Id";
+            var item = connection.Query<Item, Categoria, Area, Item, Area, Item>(
+                query,
+                (item, categoria, area, parentItem, parentArea) =>
+                {
+                    item.Categoria = categoria;
+                    item.Area = area;
+                    item.ParentItem = parentItem;
+                    if (item.ParentItem != null)
                     {
-                        item.Categoria = categoria;
-                        item.Area = area;
-                        item.ParentItem = parentItem;
-                        return item;
-                    },
-                    new { Id = id }, splitOn: "id").FirstOrDefault();
-                return result;
-            }
+                        item.ParentItem.Area = parentArea;
+                    }
+                    return item;
+                }, new { Id = id }).FirstOrDefault();
+            return item;
         }
 
-
-        public IEnumerable<Item> GetAllItems()
+        public void AddItem(Item item)
         {
-            using (IDbConnection db = new NpgsqlConnection(_connectionString))
-            {
-                var sql = @"SELECT i.*, c.*, a.*, p.*
-                            FROM items i
-                            JOIN categoria c ON i.categoriaid = c.id
-                            JOIN area a ON i.areaid = a.id
-                            LEFT JOIN items p ON i.parentid = p.id";
-                var result = db.Query<Item, Categoria, Area, Item, Item>(sql,
-                    (item, categoria, area, parentItem) =>
-                    {
-                        item.Categoria = categoria;
-                        item.Area = area;
-                        item.ParentItem = parentItem;
-                        return item;
-                    },
-                    splitOn: "id");
-                return result;
-            }
+            using var connection = new NpgsqlConnection(_connectionString);
+            var query = "INSERT INTO items (Nombre, Cantidad, Descripcion, CategoriaID, AreaID, ParentID) " +
+                        "VALUES (@Nombre, @Cantidad, @Descripcion, @CategoriaID, @AreaID, @ParentID)";
+            connection.Execute(query, item);
         }
+
+        public void UpdateItem(Item item)
+        {
+            using var connection = new NpgsqlConnection(_connectionString);
+            var query = "UPDATE items SET Nombre = @Nombre, Cantidad = @Cantidad, Descripcion = @Descripcion, " +
+                        "CategoriaID = @CategoriaID, AreaID = @AreaID, ParentID = @ParentID WHERE Id = @Id";
+            connection.Execute(query, item);
+        }
+
+        public void RemoveItem(int id)
+        {
+            using var connection = new NpgsqlConnection(_connectionString);
+            var query = "DELETE FROM items WHERE Id = @Id";
+            connection.Execute(query, new { Id = id });
+        }
+
     }
 }

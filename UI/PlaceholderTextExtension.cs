@@ -1,13 +1,13 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
+using System.Windows.Documents;
 
 namespace UI
 {
     public static class PlaceholderTextExtension
     {
         public static readonly DependencyProperty PlaceholderProperty =
-            DependencyProperty.RegisterAttached("Placeholder", typeof(string), typeof(PlaceholderTextExtension), new PropertyMetadata(default(string), OnPlaceholderChanged));
+            DependencyProperty.RegisterAttached("Placeholder", typeof(string), typeof(PlaceholderTextExtension), new PropertyMetadata(string.Empty, OnPlaceholderChanged));
 
         public static string GetPlaceholder(UIElement element)
         {
@@ -25,19 +25,13 @@ namespace UI
             {
                 textBox.GotFocus += RemovePlaceholder;
                 textBox.LostFocus += ShowPlaceholder;
-                ShowPlaceholder(textBox, null);
-            }
-        }
-
-        private static void ShowPlaceholder(object sender, RoutedEventArgs e)
-        {
-            if (sender is TextBox textBox && string.IsNullOrEmpty(textBox.Text))
-            {
-                var placeholder = GetPlaceholder(textBox);
-                if (!string.IsNullOrEmpty(placeholder))
+                if (!string.IsNullOrEmpty(textBox.Text))
                 {
-                    textBox.Text = placeholder;
-                    textBox.Foreground = Brushes.Gray;
+                    RemovePlaceholder(textBox, null);
+                }
+                else
+                {
+                    ShowPlaceholder(textBox, null);
                 }
             }
         }
@@ -47,7 +41,16 @@ namespace UI
             if (sender is TextBox textBox && textBox.Text == GetPlaceholder(textBox))
             {
                 textBox.Text = string.Empty;
-                textBox.Foreground = Brushes.Black;
+                textBox.Foreground = SystemColors.ControlTextBrush;
+            }
+        }
+
+        private static void ShowPlaceholder(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox && string.IsNullOrEmpty(textBox.Text))
+            {
+                textBox.Text = GetPlaceholder(textBox);
+                textBox.Foreground = SystemColors.GrayTextBrush;
             }
         }
     }

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Core.Entities;
-using System.Collections.Generic;
 
-namespace Core.Interfaces
+namespace Infrastructure.Repositories
 {
     public interface ICategoriaRepository
     {
