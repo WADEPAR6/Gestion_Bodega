@@ -1,7 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
 using Core.Entities;
 using AppServices.Services;
-using System.Collections.ObjectModel;
 using System.Windows.Controls;
 
 namespace UI
@@ -37,17 +39,51 @@ namespace UI
             }
         }
 
-        private void EliminarCategoria_Click(object sender, RoutedEventArgs e)
+        private async void EliminarCategoria_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.DataContext is Categoria category)
             {
-                var confirmationWindow = new ConfirmationWindow("¿Estás seguro de que deseas eliminar esta categoría?");
-                var result = confirmationWindow.ShowDialog();
+                var items = _inventoryService.GetAllItems().Where(i => i.CategoriaID == category.Id).ToList();
 
-                if (result == true && confirmationWindow.IsConfirmed)
+                if (items.Any())
                 {
-                    _inventoryService.RemoveCategoria(category.Id);
-                    LoadCategories();
+                    var itemsObservable = new ObservableCollection<Item>(items);
+                    var categoriesObservable = new ObservableCollection<Categoria>(_inventoryService.GetAllCategorias());
+
+                    var updateItemsWindow = new UpdateItemsForCategoryWindow(itemsObservable, categoriesObservable, _inventoryService, category);
+                    updateItemsWindow.ItemsUpdatedEvent += async () =>
+                    {
+                        await Task.Delay(500); // Espera de 0.5 segundos antes de eliminar la categoría
+                        try
+                        {
+                            _inventoryService.RemoveCategoria(category.Id);
+                            LoadCategories();
+                            MessageBox.Show("Categoría eliminada con éxito.");
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error al eliminar la categoría: {ex.Message}");
+                        }
+                    };
+
+                    updateItemsWindow.ShowDialog();
+                }
+                else
+                {
+                    try
+                    {
+                        var confirmationWindow = new ConfirmationWindow("¿Estás seguro de que deseas eliminar esta categoría?");
+                        if (confirmationWindow.ShowDialog() == true && confirmationWindow.IsConfirmed)
+                        {
+                            _inventoryService.RemoveCategoria(category.Id);
+                            LoadCategories();
+                            MessageBox.Show("Categoría eliminada con éxito.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error al eliminar la categoría: {ex.Message}");
+                    }
                 }
             }
         }
