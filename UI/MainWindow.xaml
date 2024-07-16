@@ -19,21 +19,18 @@
         <!-- Label for Search by Name -->
         <TextBlock Text="Buscar por Nombre" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,0,5"/>
         <!-- Search by Name -->
-        <TextBox Name="SearchNameTextBox" Width="300" Height="30" Grid.Row="1" Grid.Column="0" TextChanged="SearchNameTextBox_TextChanged" />
+        <TextBox Name="SearchNameTextBox" Width="300" Height="30" Margin="10" Grid.Row="0" Grid.Column="0" TextChanged="SearchNameTextBox_TextChanged"/>
 
-        <!-- Label for Search by Category -->
-        <TextBlock Text="Buscar por Categoría" Grid.Row="0" VerticalAlignment="Top" Margin="320,5,260,0" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
         <!-- Search by Category -->
-        <ComboBox Name="SearchCategoryComboBox" Width="300" Height="30" Grid.Row="1" SelectionChanged="SearchCategoryComboBox_SelectionChanged" DisplayMemberPath="Nombre" Margin="330,10,0,10" Grid.ColumnSpan="2"/>
-        <Button Content="Todos" Width="100" Height="30" Click="ShowAllItems_Click" Grid.Row="2" HorizontalAlignment="Left" Margin="470,0,0,0"/>
+        <ComboBox Name="SearchCategoryComboBox" Width="300" Height="30" Margin="10" Grid.Row="1" Grid.Column="0" SelectionChanged="SearchCategoryComboBox_SelectionChanged" DisplayMemberPath="Nombre"/>
+        <Button Content="Todos" Width="100" Height="30" Margin="10" Click="ShowAllItems_Click" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left"/>
 
         <!-- Label for Search by Parent Name -->
         <TextBlock Text="Buscar por Contenedor" Grid.Column="1" VerticalAlignment="Top" Margin="58,-5,-58,0"/>
         <!-- Search by Parent Name -->
         <TextBox Name="SearchParentTextBox" Width="300" Height="30" Grid.Row="1" TextChanged="SearchParentTextBox_TextChanged" Margin="85,10,0,10" Grid.Column="1"/>
-
         <!-- Add Button -->
-        <Button Content="Agregar Item" Width="150" Height="30" Click="OpenAddItemWindow_Click" Background="{StaticResource AccentBrush}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="430,0,0,0"/>
+        <Button Content="Agregar Item" Width="150" Height="30" Margin="10" Click="OpenAddItemWindow_Click" Background="LightGreen" Foreground="Black" FontSize="14" Grid.Column="1" HorizontalAlignment="Left" Grid.RowSpan="2"/>
 
         <!-- Buttons for Categories and Areas -->
         <Button Content="Gestionar Categorías" Width="150" Height="30" Click="OpenCategoryWindow_Click" Background="{StaticResource PrimaryBrush}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="30,0,0,0"/>
